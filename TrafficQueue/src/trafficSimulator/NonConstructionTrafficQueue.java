@@ -5,13 +5,13 @@ class NonConstructionTrafficQueue extends TrafficQueue {
 	public NonConstructionTrafficQueue(double distance, double speed) {
 		super(distance, speed);
 
-		size = ((distance / speed) * 60.0 * 60.0 * 60.0);
-		this.queue = new Car[size.intValue() + 1];
+		size = 120; 
+		this.queue = new Car[size];
 	}
 
 	public Car pop(int time) {
 
-		if (bottom == top) {
+		if (bottom%size == top%size) {
 			// log("Pop failed, queue empty.");
 			return null;
 		}
@@ -32,7 +32,7 @@ class NonConstructionTrafficQueue extends TrafficQueue {
 		}
 	}
 
-	protected Double actualSpeed() {
+	protected double actualSpeed() {
 		return speed;
 	}
 }

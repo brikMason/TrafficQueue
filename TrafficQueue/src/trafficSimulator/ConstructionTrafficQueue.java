@@ -4,16 +4,14 @@ class ConstructionTrafficQueue extends TrafficQueue {
 
 	public ConstructionTrafficQueue(double distance, double speed) {
 		super(distance, speed);
-		size = ((distance / speed) * 60.0 * 60.0 );
-		size = 26.0;
-		this.queue = new Car[26];
+		size = 30;
+		this.queue = new Car[size];
 
 	}
-
+	
 	public Car pop(int time) {
 
-		if (bottom == top) {
-			// log("Pop failed, queue empty.");
+		if (bottom%size == top%size) {
 			return null;
 		}
 		if (bottom < 0 || bottom >= queue.length) {
@@ -22,20 +20,22 @@ class ConstructionTrafficQueue extends TrafficQueue {
 
 		Car c = queue[bottom];
 		double secondsOnQueue = time - c.cIn;
-
-		double secondsUntilDone = (distance / actualSpeed()) * 60 * 60;
+		double aSpeed = actualSpeed();
+		
+		double secondsUntilDone = (distance / aSpeed) * 60 * 60;
 		if (secondsOnQueue >= secondsUntilDone) {
+			queue[bottom] = null;
 			bottom++;
-
+			c.speed = aSpeed;
 			return c;
 		} else {
 			return null;
 		}
 	}
 
-	protected Double actualSpeed() {
-		Double aSpeed = -1.0d;
-		Double percentFull = pFull();
+	protected double actualSpeed() {
+		double aSpeed = -1.0d;
+		double percentFull = pFull();
 		
 		if (percentFull < 0.5) {
 			aSpeed = speed;
@@ -46,8 +46,6 @@ class ConstructionTrafficQueue extends TrafficQueue {
 		} else {
 			aSpeed = speed * 0.25;
 		}
-		
-		System.out.println(aSpeed + ":"+ percentFull);
 		
 		return aSpeed;
 	}

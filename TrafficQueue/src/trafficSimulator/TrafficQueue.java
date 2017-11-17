@@ -4,7 +4,7 @@ abstract class TrafficQueue {
 	protected Car queue[];
 	protected int top = 0;
 	protected int bottom = 0;
-	protected Double size = 0.0;
+	protected int size = 0;
 	protected double distance = 0;
 	protected double speed = 0;
 	
@@ -15,18 +15,22 @@ abstract class TrafficQueue {
 
 	}
 
+	public boolean isEmpty(){
+		return top == bottom;
+	}
+	
+	public boolean isFull(){
+		return  (((top + 1)%size) == bottom);
+	}
+	
 	public void push(Car car) {
-		if (queue.length <= top) {
-			log("Push failed, queue full.");
-		}
-		if (top >= size)
-			top = 0;
 		queue[top++] = car;
+		top = top % size;
 	}
 
 	abstract protected Car pop(int time);
 
-	abstract protected Double actualSpeed();
+	abstract protected double actualSpeed();
 
 	protected double pFull() {
 		double ret = -1.0;
@@ -37,11 +41,11 @@ abstract class TrafficQueue {
 		} else {
 			ret = (top + (size - bottom)) / size;
 		}
-		//System.out.println(ret);
+
 		return ret;
 	}
 
 	protected void log(String msg) {
-		System.out.println(msg);
+		System.out.println("__"+msg);
 	}
 }
